@@ -14,7 +14,7 @@ void Tree::FreeTree(const Node *branch) {
     delete branch;
 }
 
-void Tree::PrintAllNodes(Node* branch) {
+void Tree::PrintAllNodes(Node *branch) {
     if (branch == nullptr) {
         return;
     }
@@ -63,24 +63,51 @@ Node *Tree::InsertNode(Node *root, const int value, const int id) {
     }
 
     if (root->GetId() == id) {
-
     }
 
     return root;
 }
 
-Node * Tree::DeleteNode(Node *root, const int id) {
-    if (root == nullptr) {
-        std::cerr << "No node found with ID: " << id << '\n';
-        return root;
+Node *Tree::DeleteNode(Node *branch, const int id) {
+    if (branch == nullptr) {
+        return nullptr;
     }
 
-    // if id exist we delete
-    if (existing_ids.contains(id) > 0) {
-
+    // if not found children must find it
+    if (branch->GetId() != id) {
+        branch->left = DeleteNode(branch->left, id);
+        branch->right = DeleteNode(branch->right, id);
+        return branch;
     }
 
+    // case no children
+    if (!(branch->left && branch->right)) {
+        delete branch;
+        return nullptr;
+    }
 
+    // case one child
+    if (!branch->right) {
+        Node *temp = branch->left;
+        delete branch;
+        return temp;
+    }
+    if (!branch->left) {
+        Node *temp = branch->right;
+        delete branch;
+        return temp;
+    }
+
+    // case two children
+    if (branch->left->GetPriority() > branch->right->GetPriority()) {
+        branch = RotateRight(branch);
+        branch->right = DeleteNode(branch->right, id);
+    } else {
+        branch = RotateLeft(branch);
+        branch->left = DeleteNode(branch->left, id);
+    }
+
+    return branch;
 }
 
 Node *Tree::FindNodeByValue(const int value) {
@@ -99,7 +126,7 @@ Node *Tree::FindNodeById(Node *branch, const int id) {
     }
 
     // look for the id on the left child
-    if (Node* left_side = FindNodeById(branch->left, id); left_side != nullptr) {
+    if (Node *left_side = FindNodeById(branch->left, id); left_side != nullptr) {
         return left_side;
     }
 
@@ -107,7 +134,7 @@ Node *Tree::FindNodeById(Node *branch, const int id) {
     return FindNodeById(branch->right, id);
 }
 
-Node* Tree::RotateLeft(Node *old_parent) {
+Node *Tree::RotateLeft(Node *old_parent) {
     Node *new_parent = old_parent->right;
     Node *inner_subtree = new_parent->left;
 
@@ -117,7 +144,7 @@ Node* Tree::RotateLeft(Node *old_parent) {
     return new_parent;
 }
 
-Node* Tree::RotateRight(Node *old_parent) {
+Node *Tree::RotateRight(Node *old_parent) {
     Node *new_parent = old_parent->left;
     Node *inner_subtree = new_parent->right;
 
@@ -128,5 +155,4 @@ Node* Tree::RotateRight(Node *old_parent) {
 }
 
 bool Tree::CheckIfContainsId(const int id, const int val) {
-
 }

@@ -24,7 +24,7 @@ public:
 
     void PrintAllNodes(Node* branch);
     Node *InsertNode(Node *root, const int value, const int id);
-    Node *DeleteNode(Node *root, const int id);
+    Node *DeleteNode(Node *branch, const int id);
     Node *FindNodeByValue(const int value);
     Node *FindNodeById(Node *branch, const int id);
     ~Tree() { FreeTree(this->root); };

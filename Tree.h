@@ -27,6 +27,9 @@ public:
     Node *DeleteNode(Node *branch, const int id);
     Node *FindNodeByValue(const int value);
     Node *FindNodeById(Node *branch, const int id);
+
+    int GetNodeCount() const {return static_cast<int>(existing_ids.size()); }
+
     ~Tree() { FreeTree(this->root); };
 };
 

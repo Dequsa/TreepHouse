@@ -8,4 +8,6 @@ add_executable(TreapHouse main.cpp
         Node.cpp
         Node.h
         Tree.cpp
-        Tree.h)
+        Tree.h
+        InputHandler.cpp
+        InputHandler.h)

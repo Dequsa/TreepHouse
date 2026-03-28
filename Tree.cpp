@@ -73,7 +73,7 @@ Node *Tree::DeleteNode(Node *branch, const int id) {
         return nullptr;
     }
 
-    // if not found children must find it
+    // if not found children must search
     if (branch->GetId() != id) {
         branch->left = DeleteNode(branch->left, id);
         branch->right = DeleteNode(branch->right, id);

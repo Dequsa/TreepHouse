@@ -17,8 +17,13 @@ public:
     Node* left{};
     Node* right{};
 
-    Node(int value);
+    Node(const int value, const int id);
     ~Node() = default;
+
+    // setters
+    void SetPrice(const int price) { this->value = price; }
+
+    // getters
     int GetValue() const { return value;}
     int GetId() const { return id;}
     int GetPriority() const { return priority;}

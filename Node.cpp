@@ -4,8 +4,9 @@
 
 #include "Node.h"
 
-Node::Node(int value) {
+Node::Node(const int value, const int id) {
     this->value = value;
+    this->id = id;
     left = nullptr;
     right = nullptr;
     priority = rand();

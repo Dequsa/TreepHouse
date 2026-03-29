@@ -31,38 +31,32 @@ void Tree::PrintAllNodes(Node *branch) {
 Node *Tree::InsertNode(Node *root, const int value, const int id) {
     if (root == nullptr) {
         if (existing_ids.contains(id)) {
-            Node *existing_node = FindNodeById(this->root, id);
-
-            if (existing_node == nullptr) {
-                std::cerr << "Node pointer null error while finding existing ID: " << id << '\n';
-                return root;
+            Node *existing_node = id_to_node[id];
+            if (existing_node) {
+                existing_node->SetPrice(value);
             }
-
-            existing_node->SetPrice(value);
-
             return root;
         }
         existing_ids.insert(id);
-        return new Node(value, id);
+        Node *temp = new Node(value, id);
+        id_to_node[id] = temp;
+        return temp;
     }
 
-    if (value > root->GetValue()) {
+    if (id > root->GetId()) {
         root->right = InsertNode(root->right, value, id);
 
-        // if left child has higher priority rotate right
+        // if right child has higher priority rotate left
         if (root->right != nullptr && root->right->GetPriority() > root->GetPriority()) {
             root = RotateLeft(root);
         }
     } else {
         root->left = InsertNode(root->left, value, id);
 
-        // if right child has higher priority rotate left
+        // if left child has higher priority rotate right
         if (root->left != nullptr && root->left->GetPriority() > root->GetPriority()) {
             root = RotateRight(root);
         }
-    }
-
-    if (root->GetId() == id) {
     }
 
     return root;
@@ -110,10 +104,6 @@ Node *Tree::DeleteNode(Node *branch, const int id) {
     return branch;
 }
 
-Node *Tree::FindNodeByValue(const int value) {
-    return nullptr;
-}
-
 Node *Tree::FindNodeById(Node *branch, const int id) {
     // if nothing found return nullptr up
     if (branch == nullptr) {
@@ -152,7 +142,4 @@ Node *Tree::RotateRight(Node *old_parent) {
     old_parent->left = inner_subtree;
 
     return new_parent;
-}
-
-bool Tree::CheckIfContainsId(const int id, const int val) {
 }

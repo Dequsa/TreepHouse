@@ -10,4 +10,5 @@ add_executable(TreapHouse main.cpp
         Tree.cpp
         Tree.h
         InputHandler.cpp
-        InputHandler.h)
+        InputHandler.h
+)

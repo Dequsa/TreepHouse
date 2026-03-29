@@ -12,11 +12,10 @@
 class Tree {
 private:
     std::unordered_set<int> existing_ids = {};
+    std::unordered_map<int, Node*> id_to_node = {};
     void FreeTree(const Node *branch);
-
     Node *RotateLeft(Node *old_parent);
     Node *RotateRight(Node *old_parent);
-    bool CheckIfContainsId(const int id, const int val);
 public:
     Node *root = nullptr;
 
@@ -25,7 +24,6 @@ public:
     void PrintAllNodes(Node* branch);
     Node *InsertNode(Node *root, const int value, const int id);
     Node *DeleteNode(Node *branch, const int id);
-    Node *FindNodeByValue(const int value);
     Node *FindNodeById(Node *branch, const int id);
 
     int GetNodeCount() const {return static_cast<int>(existing_ids.size()); }

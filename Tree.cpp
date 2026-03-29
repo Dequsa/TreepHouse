@@ -5,7 +5,7 @@
 #include "Tree.h"
 #include <iostream>
 
-void Tree::FreeTree(const Node *branch) {
+void Tree::FreeTree(Node *branch) {
     if (branch == nullptr) {
         return;
     }
@@ -29,35 +29,32 @@ void Tree::PrintAllNodes(Node *branch) {
 }
 
 Node *Tree::InsertNode(Node *root, const int value, const int id) {
+
     if (root == nullptr) {
-        if (existing_ids.contains(id)) {
-            Node *existing_node = id_to_node[id];
-            if (existing_node) {
-                existing_node->SetPrice(value);
-            }
-            return root;
-        }
-        existing_ids.insert(id);
-        Node *temp = new Node(value, id);
-        id_to_node[id] = temp;
-        return temp;
+        return new Node(value, id);
+    }
+
+    if (root->GetId() == id) {
+        root->SetPrice(value);
+        root->UpdateSum();
+        return root;
     }
 
     if (id > root->GetId()) {
         root->right = InsertNode(root->right, value, id);
-
         // if right child has higher priority rotate left
         if (root->right != nullptr && root->right->GetPriority() > root->GetPriority()) {
             root = RotateLeft(root);
         }
     } else {
         root->left = InsertNode(root->left, value, id);
-
         // if left child has higher priority rotate right
         if (root->left != nullptr && root->left->GetPriority() > root->GetPriority()) {
             root = RotateRight(root);
         }
     }
+
+    if (root) { root->UpdateSum(); }
 
     return root;
 }
@@ -69,8 +66,12 @@ Node *Tree::DeleteNode(Node *branch, const int id) {
 
     // if not found children must search
     if (branch->GetId() != id) {
-        branch->left = DeleteNode(branch->left, id);
-        branch->right = DeleteNode(branch->right, id);
+        if (id > branch->GetId()) {
+            branch->right = DeleteNode(branch->right, id);
+        } else {
+            branch->left = DeleteNode(branch->left, id);
+        }
+        branch->UpdateSum();
         return branch;
     }
 
@@ -84,11 +85,13 @@ Node *Tree::DeleteNode(Node *branch, const int id) {
     if (!branch->right) {
         Node *temp = branch->left;
         delete branch;
+        temp->UpdateSum();
         return temp;
     }
     if (!branch->left) {
         Node *temp = branch->right;
         delete branch;
+        temp->UpdateSum();
         return temp;
     }
 
@@ -101,6 +104,7 @@ Node *Tree::DeleteNode(Node *branch, const int id) {
         branch->left = DeleteNode(branch->left, id);
     }
 
+    if (branch) { branch->UpdateSum(); }
     return branch;
 }
 
@@ -124,12 +128,40 @@ Node *Tree::FindNodeById(Node *branch, const int id) {
     return FindNodeById(branch->right, id);
 }
 
+long long int Tree::SumBetweenIds(Node *branch, long long int id_min, long long int id_max) {
+    if (!branch) {
+        return 0;
+    }
+    if (id_min > id_max) {
+        return 0;
+    }
+
+    if (branch->min_id > id_max || branch->max_id < id_min) {
+        return 0;
+    }
+
+    if (branch->min_id >= id_min && branch->max_id <= id_max) {
+        return branch->sum;
+    }
+
+    long long ans = 0;
+    if (branch->GetId() >= id_min && branch->max_id <= id_max) {
+        ans += branch->GetValue();
+    }
+    ans += SumBetweenIds(branch->left, id_min, id_max);
+    ans += SumBetweenIds(branch->right, id_min, id_max);
+    return ans;
+}
+
 Node *Tree::RotateLeft(Node *old_parent) {
     Node *new_parent = old_parent->right;
     Node *inner_subtree = new_parent->left;
 
     new_parent->left = old_parent;
     old_parent->right = inner_subtree;
+
+    old_parent->UpdateSum();
+    new_parent->UpdateSum();
 
     return new_parent;
 }
@@ -140,6 +172,9 @@ Node *Tree::RotateRight(Node *old_parent) {
 
     new_parent->right = old_parent;
     old_parent->left = inner_subtree;
+
+    old_parent->UpdateSum();
+    new_parent->UpdateSum();
 
     return new_parent;
 }

@@ -11,9 +11,9 @@
 
 class Tree {
 private:
-    std::unordered_set<int> existing_ids = {};
-    std::unordered_map<int, Node*> id_to_node = {};
-    void FreeTree(const Node *branch);
+    // std::unordered_set<int> existing_ids = {};
+    // std::unordered_map<int, Node*> id_to_node = {};
+    void FreeTree(Node *branch);
     Node *RotateLeft(Node *old_parent);
     Node *RotateRight(Node *old_parent);
 public:
@@ -25,8 +25,9 @@ public:
     Node *InsertNode(Node *root, const int value, const int id);
     Node *DeleteNode(Node *branch, const int id);
     Node *FindNodeById(Node *branch, const int id);
+    long long int SumBetweenIds(Node *branch, long long int id_min, long long int id_max);
 
-    int GetNodeCount() const {return static_cast<int>(existing_ids.size()); }
+    int GetNodeCount() const { return root ? root->sub_tree_size : 0; }
 
     ~Tree() { FreeTree(this->root); };
 };

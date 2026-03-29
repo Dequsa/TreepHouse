@@ -23,9 +23,10 @@ void InputHandler::ChooseAndExecuteOperation(const char operation) {
             my_tree.root = my_tree.DeleteNode(my_tree.root, id);
             break;
         case 'S':
-            break;
-        default:
-            cout << "Invalid operation input\n";
+            long long min_id, max_id;
+            cin >> min_id >> max_id;
+            const long long sum = my_tree.SumBetweenIds(my_tree.root, min_id, max_id);
+            cout << sum << '\n';
             break;
     }
 }
@@ -47,5 +48,5 @@ void InputHandler::GetUserInput() {
         cin >> operation;
         ChooseAndExecuteOperation(operation);
     }
-    my_tree.PrintAllNodes(my_tree.root);
+    // my_tree.PrintAllNodes(my_tree.root);
 }

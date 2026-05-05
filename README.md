@@ -93,9 +93,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 **Kacper Marciniak**
 
-- GitHub: [@Dequsa](https://github.com/Dequsa)
-- Email: marciniak.kacperek@gmail.com
-
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
